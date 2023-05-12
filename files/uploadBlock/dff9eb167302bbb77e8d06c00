@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>My first BIMFACE app</title>
+    </head>
+<body>
+    <div id="domId" style="width:800px; height:600px"></div>
+    <script src="https://static.bimface.com/api/BimfaceSDKLoader/BimfaceSDKLoader@latest-release.js" charset="utf-8"></script>
+    <script>
+        let viewer3D;
+        let viewToken = 'b9f0d2d2c8c14620b8052f2ddbcb558f';
+        let loaderConfig = new BimfaceSDKLoaderConfig();
+            loaderConfig.viewToken = viewToken;
+        BimfaceSDKLoader.load(loaderConfig, successCallback, failureCallback);
+            function successCallback(viewMetaData) {
+                let domShow = document.getElementById('domId');
+                let viewConfig = new Glodon.Bimface.Viewer.Viewer3DConfig();
+                    viewConfig.domElement = domShow;    
+                    viewConfig.viewMetaData = false;
+                    viewConfig.enableWireframe = false;
+                    viewConfig.backgroundColor[0].color.red = 255;
+                    viewConfig.backgroundColor[0].color.green = 255;
+                    viewConfig.backgroundColor[0].color.blue = 255;
+                    viewConfig.backgroundColor[1].color.red = 255;
+                    viewConfig.backgroundColor[1].color.green = 255;
+                    viewConfig.backgroundColor[1].color.blue = 255;
+                viewer3D = new Glodon.Bimface.Viewer.Viewer3D(viewConfig);    
+                viewer3D.addView(viewToken);  
+                
+                viewer3D.addEventListener("ViewAdded",function(){
+                  viewer3D.startAutoRotate(0.5);
+                  viewer3D.setNavigationMode(Glodon.Bimface.Viewer.NavigationMode3D.OrbitWithModelCenter);
+                  viewer3D.zoomOut();
+                });
+            };
+            
+            function failureCallback(error) {
+                console.log(error);
+            };
+    </script>
+</body>
+</html>
