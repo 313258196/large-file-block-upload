@@ -1,4 +1,62 @@
 .container{
+	width: 50vw;
     font-size: 16px;
     font-weight: 500;
+	display: flex;
+	flex-wrap: wrap;
+	.boxi{
+		flex: 1;
+		max-width: 50%;
+		margin: 0 5px;
+		
+		&.boxLeft{
+			
+		}
+		&.boxRight{
+			
+		}
+	}
+	
+	.title{
+		font-size: 20px;
+		font-family: Microsoft YaHei,Arial,sans-serif;
+		color: #303133;
+		margin-bottom: 5px;
+		text-align: left;
+	}
+	
+	.progressItem{
+		margin: 10px 0;
+		
+		.progrTitle{
+			font-family: Microsoft YaHei,Arial,sans-serif;
+			color: #303133;
+			margin-bottom: 3px;
+			text-align: left;
+		}
+	}
+	
+	.inpLabel{
+		display: inline-block;
+		width: 100%;
+		height: 100px;
+		border-radius: 14px;
+		background-color: #67c23a;
+		text-align: center;
+		line-height: 100px;
+		color: #fff;
+		font-weight: 500;
+		cursor: pointer;
+		transition: all .5s ease;
+		
+		&:hover{
+			border-radius: 10px;
+			opacity: 0.8;
+		}
+	}
+	
+	.inp{
+		visibility: hidden;
+		height: 0;
+	}
 }
