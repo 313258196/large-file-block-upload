@@ -2,7 +2,7 @@
 export const fileToBlock = (file, url) => {
     const size = file.size;
     const name = file.name;
-    const chunkSize = 0.5 * 1024 * 1024;// 2mb为一片
+    const chunkSize = 2 * 1024 * 1024;// 2mb为一片
     const maxChunk = Math.ceil(size / chunkSize);
     const hash = size + (+new Date()) + Math.ceil(Math.random() * 1000);
     const reqs = Array(maxChunk).fill(0).map((v, index) => {
@@ -18,8 +18,8 @@ export const fileToBlock = (file, url) => {
         formData.append('index', index.toString());
         formData.append('maxChunk', maxChunk.toString());
         formData.append('hash', hash);
-        formData.append('size', file.size);
-        formData.append('originalFilename', file.name);
+        formData.append('size', size);
+        formData.append('originalFilename', name);
 
         const req = request(url, { data: formData });
         return req;
