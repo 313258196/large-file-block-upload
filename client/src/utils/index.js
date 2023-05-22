@@ -2,7 +2,7 @@
 export const fileToBlock = (file, url) => {
     const size = file.size;
     const name = file.name;
-    const chunkSize = 2 * 1024 * 1024;// 2mb为一片
+    const chunkSize = 5 * 1024 * 1024;// 5mb为一片
     const maxChunk = Math.ceil(size / chunkSize);
     const hash = size + (+new Date()) + Math.ceil(Math.random() * 1000);
     const reqs = Array(maxChunk).fill(0).map((v, index) => {
@@ -58,6 +58,12 @@ export const blockBundle = async ({
 
             const bund = ({ value, done }) => {
                 value && value().then(x => {
+					if(x.code != 200){
+						onError && onError(err);
+						reject("上传失败！");
+						return;
+					}
+					
                     ev.percent += (100 / observers.length);
                     x = { ...x, ev: {
 						...ev,

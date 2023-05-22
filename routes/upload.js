@@ -22,12 +22,10 @@ function streamMerge(args) {
 	const sourceFiles = `${uploadBaseDirPath}/${tempBlockDir}`;
 	const targetFile = `${uploadBaseDirPath}/${originalFilename}`;
 	// 获取源文件目录下的所有文件 【合并流一定要注重块文件的顺序】
-	// console.log(333,sourceFiles,fs.readdirSync(sourceFiles));
 	const scripts = fs.readdirSync(sourceFiles).sort((a, b) => a - b); 
 	// 创建一个可写流
 	const fileWriteStream = fs.createWriteStream(targetFile); 
 
-	// console.log(222,scripts);
 	return streamMergeRecursive(scripts, fileWriteStream, args);
 }
 
@@ -38,11 +36,9 @@ function streamMerge(args) {
  */
 function streamMergeRecursive(scripts = [], fileWriteStream, args) {
 	const { uploadBaseDirPath, tempBlockDir, originalFilename } = args;
-	// console.log(111,scripts);
 
 	return new Promise((resolve,reject) => {
 		const _bundle = (scripts, fileWriteStream, args) => {
-			console.log(000,scripts);
 			// 递归到尾部情况判断
 			if (!scripts.length) {
 				// 最后关闭可写流，防止内存泄漏
@@ -170,44 +166,35 @@ router.post("/uploadBlock", (req, res) => {
 					(function(_index){
 						const index = _index;
 						ws = fs.createWriteStream(`${tempBlockDirPath}/${index}`);
-						console.log("ws.write...", index);
-						// function write(data, cb) {
-						// 	if (!ws.write(data)) {
-						// 	  	ws.once('drain', cb);
-						// 	} else {
-						// 	  	process.nextTick(cb);
-						// 	}
-						// }
-
-						ws.write(buffer, "utf8", (error) => {
-							console.log("ws.write end...", index, error);
+						ws.write(buffer, (error) => {
 							// 删除formidable储存的原文件地址
 							fs.unlinkSync(file.filepath);
 	
 							// 最后一个分片进行合并
 							if (parseInt(index) + 1 == maxChunk) {
-								// console.log("tempBlockDirPath...",tempBlockDirPath);
-								streamMerge({
-									uploadBaseDirPath,
-									tempBlockDir: hash,
-									originalFilename
-								}).then(() => {
-									// removeDir(tempBlockDirPath);
-									res.send({
-										code: 200,
-										msg: "上传成功！",
-										data: {
-											path: pathAbso + "/" + originalFilename,
-											hash
-										}
+								setTimeout(() => {
+									streamMerge({
+										uploadBaseDirPath,
+										tempBlockDir: hash,
+										originalFilename
+									}).then(() => {
+										removeDir(tempBlockDirPath);
+										res.send({
+											code: 200,
+											msg: "上传成功！",
+											data: {
+												path: pathAbso + "/" + originalFilename,
+												hash
+											}
+										});
+									}).catch(err => {
+										res.send({
+											code: 400,
+											msg: "合并失败！",
+											data: err
+										});
 									});
-								}).catch(err => {
-									res.send({
-										code: 400,
-										msg: "合并失败！",
-										data: err
-									});
-								});
+								}, 2000)
 							} else {
 								if(error){
 									res.send({

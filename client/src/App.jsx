@@ -9,32 +9,29 @@ export default defineComponent({
 		const showUploadList = ref([]);
 
         const fileUploadBlockChange = (e) => {
-            const files = e.target.files;
-
-            for(let i = 0,len = files.length;i<len;i++){
-                const file = files[i];
-                const {
-                    size,
-                    name,
-                    hash,
-                    chunkSize,
-                    maxChunk,
-                    reqs
-                } = fileToBlock(file, "http://localhost:8000/upload/uploadBlock");
+			Array.from(e.target.files).forEach(file => {
+				const {
+				    size,
+				    name,
+				    hash,
+				    chunkSize,
+				    maxChunk,
+				    reqs
+				} = fileToBlock(file, "http://localhost:3132/upload/uploadBlock");
 				showUploadList.value.push({ hash, name, percent: 0 });
-                blockBundle({
-                    observers: reqs,
-                    onProgress: (res) => {
-                        console.log("onProgress...",res);
+				blockBundle({
+				    observers: reqs,
+				    onProgress: (res) => {
+				        console.log("onProgress...",res);
 						const idx = showUploadList.value.findIndex(item => item.hash == res.data.hash);
 						if(idx !== -1){
 							showUploadList.value[idx].percent = res.ev.percent;
 						}
-                    },
-                    onComplete: ({ contains, ev }) => {
-                        console.log("onComplete...",contains,ev);
-                        // 最后一个分片 应该返回真实的完整的文件信息
-                        let resTrue = contains[contains.length - 1];
+				    },
+				    onComplete: ({ contains, ev }) => {
+				        console.log("onComplete...",contains,ev);
+				        // 最后一个分片 应该返回真实的完整的文件信息
+				        let resTrue = contains[contains.length - 1];
 						const idx = showUploadList.value.findIndex(item => item.hash == resTrue.data.hash);
 						if(idx !== -1){
 							showUploadList.value[idx].percent = ev.percent;
@@ -43,16 +40,16 @@ export default defineComponent({
 							    type: 'success',
 							});
 						}
-                    },
-                    onError: (err) => {
+				    },
+				    onError: (err) => {
 						// ElMessage({
 						//     message: `${showUploadList.value[idx].name}上传成功！`,
 						//     type: 'error',
 						// });
-                        console.log("onError...", err);
-                    }
-                });
-            }
+				        console.log("onError...", err);
+				    }
+				});
+			});
         }
 
         return () => (

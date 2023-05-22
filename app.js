@@ -42,8 +42,8 @@ app.use(function (err, req, res, next) {
     res.render("error");
 });
 
-app.listen(8000, function () {
-    console.log("server open success and listening port 8000...");
+app.listen(3132, function () {
+    console.log("server open success and listening port 3132...");
 });
 
 module.exports = app;
