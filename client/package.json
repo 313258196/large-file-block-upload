@@ -4,11 +4,12 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"dev": "vite --host",
+		"dev": "npm i & vite --host",
 		"build": "vite build",
 		"preview": "vite preview"
 	},
 	"dependencies": {
+		"client": "file:",
 		"element-plus": "^2.3.4",
 		"vue": "^3.2.47"
 	},

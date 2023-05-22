@@ -5,7 +5,7 @@
     "scripts": {
         "start": "nodemon ./bin/www",
         "client": "npm run dev --prefix client",
-        "dev": "concurrently \"npm run start\" \"npm run client\""
+        "dev": "npm i & concurrently \"npm run start\" \"npm run client\""
     },
     "dependencies": {
         "busboy": "^1.6.0",
